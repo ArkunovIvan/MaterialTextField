@@ -38,11 +38,7 @@ IB_DESIGNABLE
  */
 @property (nonatomic) IBInspectable UIColor *placeholderColor;
 
-/**
- * Defaults to the first applicable font:
- * - the attributed placeholder font at the default placeholder size
- * - the text field font at the default placeholder size
- */
+@property (nonatomic) UIColor *errorPlaceholderColor;
 @property (nonatomic) UIFont *placeholderFont;
 
 /**
@@ -59,6 +55,8 @@ IB_DESIGNABLE
  * The color of the underline when the text field is not in focus.
  */
 @property (nonatomic) IBInspectable UIColor *underlineColor;
+@property (nonatomic) UIColor *editUnderlineColor;
+@property (nonatomic) UIColor *errorUnderlineColor;
 
 /**
  * To display an error under the text field, provide an NSError with a localized description.

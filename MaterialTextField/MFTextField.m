@@ -146,16 +146,15 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
 
 - (void)setupErrorConstraints
 {
-    self.errorLabelTopConstraint = [self.errorLabel.topAnchor constraintEqualToAnchor:self.topAnchor
-                                                                             constant:[self topPaddingForErrorLabelHidden:!self.hasError]];
-    NSLayoutConstraint *bottom = [self.errorLabel.bottomAnchor constraintEqualToAnchor:self.bottomAnchor];
+    self.errorLabelTopConstraint = [self.errorLabel.topAnchor constraintEqualToAnchor:self.bottomAnchor
+                                                                             constant:self.errorPadding.height];
     NSLayoutConstraint *leading = [self.errorLabel.leadingAnchor constraintEqualToAnchor:self.leadingAnchor
                                                                                 constant:self.errorPadding.width];
     NSLayoutConstraint *trailing = [self.trailingAnchor constraintGreaterThanOrEqualToAnchor:self.errorLabel.trailingAnchor
                                                                                     constant:self.errorPadding.width];
     self.errorLabelHorizontalConstraints = @[leading, trailing];
     
-    [NSLayoutConstraint activateConstraints:@[self.errorLabelTopConstraint, bottom, leading, trailing]];
+    [NSLayoutConstraint activateConstraints:@[self.errorLabelTopConstraint, leading, trailing]];
     
     self.errorLabelZeroHeightConstraint = [self.errorLabel.heightAnchor constraintEqualToConstant:0];
     self.errorLabelZeroHeightConstraint.active = !self.hasError;
@@ -360,10 +359,10 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
     UIColor *underlineColor;
 
     if (self.hasError) {
-        underlineColor = self.errorColor;
+        underlineColor = self.errorUnderlineColor;
     }
     else {
-        underlineColor = self.isFirstResponder ? self.tintColor : self.underlineColor;
+        underlineColor = self.isFirstResponder ? self.editUnderlineColor : self.underlineColor;
     }
 
     self.underlineLayer.backgroundColor = underlineColor.CGColor;
@@ -501,7 +500,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
     UIColor *color;
 
     if (self.isFirstResponder) {
-        color = (self.hasError) ? self.errorColor : self.tintColor;
+        color = (self.hasError) ? self.errorPlaceholderColor : self.placeholderColor;
     }
     else {
         color = self.placeholderColor;
@@ -618,13 +617,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
 
 - (CGFloat)topPaddingForErrorLabelHidden:(BOOL)hidden
 {
-    CGFloat topPadding = CGRectGetMaxY(self.underlineLayer.frame);
-
-    if (!hidden) {
-        topPadding += self.errorPadding.height;
-    }
-
-    return topPadding;
+    return self.errorPadding.height;
 }
 
 - (void)updateErrorLabelPosition
@@ -710,11 +703,7 @@ static NSTimeInterval const MFDefaultAnimationDuration = 0.3;
 - (CGSize)intrinsicContentSize
 {
     CGSize intrinsicSize = [super intrinsicContentSize];
-
-    if (!self.hasError) {
-        intrinsicSize.height = CGRectGetMaxY(self.underlineLayer.frame);
-    }
-
+    intrinsicSize.height = CGRectGetMaxY(self.underlineLayer.frame);
     return intrinsicSize;
 }
 
